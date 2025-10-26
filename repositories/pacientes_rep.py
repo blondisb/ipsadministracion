@@ -37,6 +37,7 @@ class RepositorioPacientes:
     
     def crear_paciente(self, paciente: PacienteCrear) -> Optional[Dict[str, Any]]:
         try:
+            paciente.fecha_nacimiento = paciente.fecha_nacimiento.isoformat()
             datos_paciente = paciente.dict()
             respuesta = self.cliente.table(self.tabla).insert(datos_paciente).execute()
             return respuesta.data[0] if respuesta.data else None
