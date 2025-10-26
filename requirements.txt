@@ -5,6 +5,8 @@ uvicorn
 python-jose[cryptography]
 pydantic
 pydantic-settings
-smolagents
 groq
 python-dateutil
+crewai
+crewai-tools
+langchain-community
