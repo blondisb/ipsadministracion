@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from esquemas.esquemas_paciente import Paciente
+from schemas.paciente_sch import Paciente
 
 class CitaBase(BaseModel):
     profesional_id: int

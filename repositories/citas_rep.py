@@ -2,7 +2,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from supabase import Client
 from repositories.supabase_client import obtener_cliente_supabase
-from schemas.cita_sch import CitaCrear, CitaActualizar
+from schemas.citas_sch import CitaCrear, CitaActualizar
 import logging
 
 logger = logging.getLogger(__name__)

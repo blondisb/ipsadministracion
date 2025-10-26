@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from utils.security import verificar_token
 from config import settings
-
-from routers import pacientes
+from routers import pacientes, citas
 
 app = FastAPI(
     title="Medical Appointment API",
@@ -21,7 +20,6 @@ app.add_middleware(
 
 security = HTTPBearer()
 
-
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     payload = verificar_token(token)
@@ -36,10 +34,17 @@ async def root():
 
 # Include routers
 app.include_router(
-    patients.router,
-    prefix="/api/v1/patients",
+    pacientes.router,
+    prefix="/api/pacientes",
     tags=["Pacientes"],
     dependencies=[Depends(get_current_user)]
+)
+
+app.include_router(
+    citas.router,
+    prefix="/api/citas",
+    tags=["Citas"]
+    # ,dependencies=[Depends(get_current_user)]
 )
 
 if __name__ == "__main__":
