@@ -4,6 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from utils.security import verificar_token
 from config import settings
 
+from routers import pacientes
 
 app = FastAPI(
     title="Medical Appointment API",
