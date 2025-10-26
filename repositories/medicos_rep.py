@@ -17,3 +17,11 @@ class RepositorioMedicos:
         except Exception as e:
             logger.error(f"Error obteniendo medico {profesional_id}: {e}")
             return None
+        
+    def obtener_profesionales_activos(self) -> List[Dict[str, Any]]:
+        try:
+            respuesta = self.cliente.table(self.tabla).select("*").eq("activo", True).execute()
+            return respuesta.data
+        except Exception as e:
+            logger.error(f"Error obteniendo medicos activos: {e}")
+            return []

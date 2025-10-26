@@ -12,4 +12,6 @@ class AssistantResponse(BaseModel):
     hora: str
     profesional_id: int
     disponible: bool
+    cita_creada: bool
+    cita_id: Optional[int] = None
     mensaje: str
