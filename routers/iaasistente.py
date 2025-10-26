@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from services.iaasistente_srv import ServicioAssistant
-from esquemas.esquemas_assistant import AssistantRequest, AssistantResponse
+from schemas.iaasistente_sch import AssistantRequest, AssistantResponse
 import logging
 
 logger = logging.getLogger(__name__)

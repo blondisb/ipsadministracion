@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from utils.security import obtener_usuario_actual
 from config import settings
-from routers import pacientes, citas, disponibilidad
+from routers import pacientes, citas, disponibilidad, iaasistente
 
 app = FastAPI(
     title="Medical Appointment API",

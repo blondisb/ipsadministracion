@@ -4,16 +4,17 @@ from typing import Dict, Any, List
 import json
 from datetime import datetime, date, timedelta
 import logging
-from repositorios.repositorio_profesionales import RepositorioProfesionales
-from servicios.servicio_disponibilidad import ServicioDisponibilidad
-from repositorios.repositorio_citas import RepositorioCitas
+from config import settings
+from repositories.medicos_rep import RepositorioMedicos
+from services.disponibilidad_srv import ServicioDisponibilidad
+from repositories.citas_rep import RepositorioCitas
 
 logger = logging.getLogger(__name__)
 
 class ServicioAssistant:
     def __init__(self):
-        self.groq_client = Groq(api_key="tu-api-key-de-groq")  # Configurar en variables de entorno
-        self.repositorio_profesionales = RepositorioProfesionales()
+        self.groq_client = Groq(api_key=settings.GROQ_API_KEY)
+        self.repositorio_profesionales = RepositorioMedicos()
         self.repositorio_citas = RepositorioCitas()
         
     def crear_agente(self) -> CodeAgent:
@@ -45,7 +46,7 @@ class ServicioAssistant:
         agent = CodeAgent(
             tools=herramientas,
             model="groq/llama3-8b-8192",  # Puedes cambiar el modelo según disponibilidad
-            max_steps=10,
+            max_steps=5,
             verbosity_level=1
         )
         
@@ -91,8 +92,8 @@ class ServicioAssistant:
     def obtener_horarios_disponibles(self, profesional_id: int, fecha: str) -> Dict[str, Any]:
         """Obtener horarios disponibles de un profesional en una fecha específica"""
         try:
-            from servicios.servicio_disponibilidad import ServicioDisponibilidad
-            from repositorios.repositorio_citas import RepositorioCitas
+            from services.disponibilidad_srv import ServicioDisponibilidad
+            from repositories.citas_rep import RepositorioCitas
             
             servicio_disponibilidad = ServicioDisponibilidad(
                 self.repositorio_citas, 
