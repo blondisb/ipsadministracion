@@ -10,5 +10,5 @@ def verificar_token(token: str):
         return None
 
 def crear_token_acceso(datos: dict):
-    from servicios.servicio_autenticacion import ServicioAutenticacion
+    from services.auth_srv import ServicioAutenticacion
     return ServicioAutenticacion.crear_token_acceso(datos)
