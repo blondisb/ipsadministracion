@@ -5,6 +5,7 @@
 ## 📋 Descripción
 
 API REST desarrollada con **FastAPI** para la gestión integral de pacientes y citas médicas. Incluye un asistente virtual con IA para agendar citas de manera inteligente.
+Nota: Ver Presentación y documentación en la carpeta doc_media/ de este repositorio. Documentación swagger mas abajo en este readme.
 
 ## ✨ Características Principales
 
@@ -189,42 +190,23 @@ El proyecto incluye configuración para despliegue automático en Google Cloud R
 
 ```
 api-medica/
-├── enrutadores/          # Endpoints de la API
-├── servicios/           # Lógica de negocio
-├── repositorios/        # Acceso a datos
-├── esquemas/           # Modelos Pydantic
-├── herramientas/        # Tools para crewAI
-├── utilidades/         # Funciones auxiliares
-├── principal.py        # Aplicación FastAPI
-├── configuracion.py    # Configuración
-├── requisitos.txt      # Dependencias
+├── routers/          # Endpoints de la API
+├── services/           # Lógica de negocio
+├── repositories/        # Acceso a datos
+├── schemas/           # Modelos Pydantic
+├── ai/        # Tools para crewAI
+├── utils/         # Funciones auxiliares
+├── main.py        # Aplicación FastAPI
+├── config.py    # Configuración
+├── requirements.txt      # Dependencias
 ├── Dockerfile          # Configuración Docker
-├── cloudbuild.yaml     # Google Cloud Build
 └── README.md          # Este archivo
 ```
-
-## 🔧 Desarrollo
-
-### Ejecutar Tests
-```bash
-pytest tests/
-```
-
-### Formatear Código
-```bash
-black .
-```
-
-### Verificar Tipos
-```bash
-mypy .
-```
-
 
 
 ## 👥 Autores
 
-**Tu Nombre** - [tu-usuario](https://github.com/blondisb)
+**Blondis Barrios** - [LinkedIn](https://www.linkedin.com/in/blondisbarrios-ingeniero-electronico) - [Github](https://github.com/blondisb)
 
 ## 🙏 Agradecimientos
 
