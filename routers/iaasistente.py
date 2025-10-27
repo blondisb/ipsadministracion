@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from services.iaasistente_srv import ServicioAssistant
 from schemas.iaasistente_sch import AssistantRequest, AssistantResponse
+from repositories.pacientes_rep import RepositorioPacientes
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,11 @@ async def procesar_solicitud_assistant(
     Endpoint del asistente virtual para agendar citas médicas
     """
     try:
+        paciente_srv = RepositorioPacientes()
+        paciente = paciente_srv.obtener_paciente(request.paciente_id)
+        if not paciente:
+            raise HTTPException(status_code=404, detail="Paciente no encontrado")
+        
         servicio = obtener_servicio_assistant()
         resultado = servicio.procesar_solicitud(request.mensaje, request.paciente_id)
         
