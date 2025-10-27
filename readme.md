@@ -118,6 +118,7 @@ Authorization: Bearer <tu_token>
 #### 🔐 Autenticación
 - `POST /auth/login` - Iniciar sesión
 - `POST /auth/registro` - Registrar nuevo usuario
+- `POST /auth/verificar-token` - Usando el token JWT se ejecuta este endpoint, solo para comprobar el estado del token
 
 #### 👥 Pacientes
 - `GET /patients` - Listar pacientes
@@ -131,11 +132,9 @@ Authorization: Bearer <tu_token>
 - `POST /appointments` - Crear cita
 - `GET /appointments/{id}` - Obtener cita específica
 - `PUT /appointments/{id}` - Actualizar cita
-- `POST /appointments/verificar-disponibilidad` - Verificar disponibilidad
 
 #### 🕒 Disponibilidad
 - `GET /availability/profesional/{id}` - Horarios disponibles de un médico
-- `GET /availability/profesionales/activos` - Listar profesionales activos
 
 #### 🤖 Asistente IA
 - `POST /assistant` - Procesar solicitud de agendamiento con IA
