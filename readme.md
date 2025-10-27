@@ -5,7 +5,7 @@
 ## 📋 Descripción
 
 API REST desarrollada con **FastAPI** para la gestión integral de pacientes y citas médicas. Incluye un asistente virtual con IA para agendar citas de manera inteligente.
-Nota: Ver Presentación y documentación en la carpeta doc_media/ de este repositorio. Documentación swagger mas abajo en este readme.
+Nota: Archivo [PDF](doc_media/capturas_y_mejoras_propuestas.pdf) con pantallazos y pregunta **REFLEXIÓN**. Documentación swagger mas abajo en este readme.
 
 ## ✨ Características Principales
 
