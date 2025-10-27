@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from repositories.usuarios_rep import RepositorioUsuarios
 from services.auth_srv import ServicioAutenticacion
 from schemas.auth_sch import Token, UsuarioLogin, UsuarioCrear, Usuario
+from utils.security import obtener_usuario_actual
 import logging
 
 logger = logging.getLogger(__name__)
@@ -69,8 +70,8 @@ def registrar_usuario(
     return Usuario(**usuario_creado)
 
 @router.get("/verificar-token")
-def verificar_token():
+def verificar_token(usuario_actual: dict = Depends(obtener_usuario_actual)):
     """
     Verificar si el token es válido (endpoint básico)
     """
-    return {"mensaje": "Endpoint de verificación de token - implementar según necesidad"}
+    return {"mensaje": "token válido"}
