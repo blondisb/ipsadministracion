@@ -50,7 +50,7 @@ API REST desarrollada con **FastAPI** para la gestión integral de pacientes y c
 
 ### 1. Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/api-medica.git
+git clone https://github.com/blondisb/ipsadministracion.git
 cd api-medica
 ```
 
@@ -100,7 +100,8 @@ python crear_usuario_admin.py
 uvicorn principal:app --reload
 ```
 
-La API estará disponible en: http://localhost:8000
+La API estará disponible en: https://ipsadministracion-938932231856.us-east1.run.app/ ó http://localhost:8000
+Ya está desplegada en google cloud.
 
 ## 📚 Documentación de la API
 
@@ -114,39 +115,39 @@ Authorization: Bearer <tu_token>
 ### Endpoints Principales
 
 #### 🔐 Autenticación
-- `POST /api/v1/auth/login` - Iniciar sesión
-- `POST /api/v1/auth/registro` - Registrar nuevo usuario
+- `POST /auth/login` - Iniciar sesión
+- `POST /auth/registro` - Registrar nuevo usuario
 
 #### 👥 Pacientes
-- `GET /api/v1/pacientes` - Listar pacientes
-- `POST /api/v1/pacientes` - Crear paciente
-- `GET /api/v1/pacientes/{id}` - Obtener paciente específico
-- `PUT /api/v1/pacientes/{id}` - Actualizar paciente
-- `DELETE /api/v1/pacientes/{id}` - Eliminar paciente
+- `GET /patients` - Listar pacientes
+- `POST /patients` - Crear paciente
+- `GET /patients/{id}` - Obtener paciente específico
+- `PUT /patients/{id}` - Actualizar paciente
+- `DELETE /patients/{id}` - Eliminar paciente
 
 #### 📅 Citas
-- `GET /api/v1/citas` - Listar todas las citas
-- `POST /api/v1/citas` - Crear cita
-- `GET /api/v1/citas/{id}` - Obtener cita específica
-- `PUT /api/v1/citas/{id}` - Actualizar cita
-- `POST /api/v1/citas/verificar-disponibilidad` - Verificar disponibilidad
+- `GET /appointments` - Listar todas las citas
+- `POST /appointments` - Crear cita
+- `GET /appointments/{id}` - Obtener cita específica
+- `PUT /appointments/{id}` - Actualizar cita
+- `POST /appointments/verificar-disponibilidad` - Verificar disponibilidad
 
 #### 🕒 Disponibilidad
-- `GET /api/v1/disponibilidad/profesional/{id}` - Horarios disponibles de un médico
-- `GET /api/v1/disponibilidad/profesionales/activos` - Listar profesionales activos
+- `GET /availability/profesional/{id}` - Horarios disponibles de un médico
+- `GET /availability/profesionales/activos` - Listar profesionales activos
 
 #### 🤖 Asistente IA
-- `POST /api/v1/assistant` - Procesar solicitud de agendamiento con IA
+- `POST /assistant` - Procesar solicitud de agendamiento con IA
 
 ### Documentación Interactiva
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Swagger UI**: https://ipsadministracion-938932231856.us-east1.run.app/docs o http://localhost:8000/docs
+- **ReDoc**: https://ipsadministracion-938932231856.us-east1.run.app/redoc o http://localhost:8000/redoc
 
 ## 🧠 Uso del Asistente IA
 
 ### Ejemplo de Solicitud
 ```bash
-POST /api/v1/assistant
+POST /assistant
 Content-Type: application/json
 
 {
@@ -219,25 +220,15 @@ black .
 mypy .
 ```
 
-## 🤝 Contribución
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para detalles.
 
 ## 👥 Autores
 
-**Tu Nombre** - [tu-usuario](https://github.com/tu-usuario)
+**Tu Nombre** - [tu-usuario](https://github.com/blondisb)
 
 ## 🙏 Agradecimientos
 
 - **FastAPI** - Por el excelente framework
 - **Supabase** - Por la base de datos en la nube
 - **crewAI** - Por el framework de agentes
-- **Groq** - Por la plataforma de inferencia de IA
+- **Groq** - Por la plataforma de provision de hardware para LLMs
