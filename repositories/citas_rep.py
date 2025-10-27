@@ -61,6 +61,7 @@ class RepositorioCitas:
     
     def crear_cita(self, cita: CitaCrear) -> Optional[Dict[str, Any]]:
         try:
+            cita.fecha_cita = cita.fecha_cita.isoformat()
             datos_cita = cita.dict()
             respuesta = self.cliente.table(self.tabla).insert(datos_cita).execute()
             return respuesta.data[0] if respuesta.data else None

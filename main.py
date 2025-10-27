@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from utils.security import verificar_token
+from utils.security import obtener_usuario_actual
 from config import settings
-from routers import pacientes, citas
+from routers import pacientes, citas, disponibilidad, iaasistente
 
 app = FastAPI(
     title="Medical Appointment API",
@@ -20,13 +20,6 @@ app.add_middleware(
 
 security = HTTPBearer()
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
-    payload = verificar_token(token)
-    if payload is None:
-        raise HTTPException(status_code=401, detail="Token inválido o expirado")
-    return payload
-
 
 @app.get("/")
 async def root():
@@ -35,16 +28,30 @@ async def root():
 # Include routers
 app.include_router(
     pacientes.router,
-    prefix="/api/pacientes",
-    tags=["Pacientes"],
-    dependencies=[Depends(get_current_user)]
+    prefix="/patients",
+    tags=["Pacientes"]
+    # ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 app.include_router(
     citas.router,
-    prefix="/api/citas",
+    prefix="/citas",
     tags=["Citas"]
-    # ,dependencies=[Depends(get_current_user)]
+    # ,dependencies=[Depends(obtener_usuario_actual)]
+)
+
+# Nuevo enrutador de disponibilidad
+app.include_router(
+    disponibilidad.enrutador,
+    prefix="/availability",
+    tags=["Disponibilidad"]
+    # ,dependencies=[Depends(obtener_usuario_actual)]
+)
+
+app.include_router(
+    iaasistente.enrutador,
+    prefix="/assistant",
+    tags=["Asistente IA"]
 )
 
 if __name__ == "__main__":

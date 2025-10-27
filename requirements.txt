@@ -5,4 +5,10 @@ uvicorn
 python-jose[cryptography]
 pydantic
 pydantic-settings
-
+groq
+python-dateutil
+crewai
+crewai-tools
+langchain-community
+langchain-groq
+litellm
