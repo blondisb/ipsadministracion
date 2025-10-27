@@ -41,7 +41,7 @@ app.include_router(
 
 app.include_router(
     citas.router,
-    prefix="/citas",
+    prefix="/appointments",
     tags=["Citas"]
     ,dependencies=[Depends(obtener_usuario_actual)]
 )
