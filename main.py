@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from utils.security import obtener_usuario_actual
 from config import settings
-from routers import pacientes, citas, disponibilidad, iaasistente
+from routers import pacientes, citas, disponibilidad, iaasistente, auth
 
 app = FastAPI(
     title="Medical Appointment API",
@@ -25,33 +25,40 @@ security = HTTPBearer()
 async def root():
     return {"message": "Medical Appointment API"}
 
-# Include routers
+
+app.include_router(
+    auth.router,
+    prefix="/auth",
+    tags=["Autenticación"]
+)
+
 app.include_router(
     pacientes.router,
     prefix="/patients",
     tags=["Pacientes"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 app.include_router(
     citas.router,
     prefix="/citas",
     tags=["Citas"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 # Nuevo enrutador de disponibilidad
 app.include_router(
-    disponibilidad.enrutador,
+    disponibilidad.router,
     prefix="/availability",
     tags=["Disponibilidad"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 app.include_router(
-    iaasistente.enrutador,
+    iaasistente.router,
     prefix="/assistant",
     tags=["Asistente IA"]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 if __name__ == "__main__":
