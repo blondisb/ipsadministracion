@@ -28,7 +28,7 @@ async def root():
 
 app.include_router(
     auth.router,
-    prefix="/api/v1/auth",
+    prefix="/auth",
     tags=["Autenticación"]
 )
 
@@ -36,14 +36,14 @@ app.include_router(
     pacientes.router,
     prefix="/patients",
     tags=["Pacientes"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 app.include_router(
     citas.router,
     prefix="/citas",
     tags=["Citas"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 # Nuevo enrutador de disponibilidad
@@ -51,14 +51,14 @@ app.include_router(
     disponibilidad.router,
     prefix="/availability",
     tags=["Disponibilidad"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 app.include_router(
     iaasistente.router,
     prefix="/assistant",
     tags=["Asistente IA"]
-    # ,dependencies=[Depends(obtener_usuario_actual)]
+    ,dependencies=[Depends(obtener_usuario_actual)]
 )
 
 if __name__ == "__main__":

@@ -9,8 +9,12 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-def obtener_servicio_autenticacion() -> ServicioAutenticacion:
-    repositorio_usuarios = RepositorioUsuarios()
+def obtener_repositorio_usuarios() -> RepositorioUsuarios:
+    return RepositorioUsuarios()
+
+def obtener_servicio_autenticacion(
+    repositorio_usuarios: RepositorioUsuarios = Depends(obtener_repositorio_usuarios)
+) -> ServicioAutenticacion:
     return ServicioAutenticacion(repositorio_usuarios)
 
 @router.post("/login", response_model=Token)
@@ -37,15 +41,13 @@ def login_formulario(
 @router.post("/registro", response_model=Usuario)
 def registrar_usuario(
     usuario: UsuarioCrear,
-    servicio_autenticacion: ServicioAutenticacion = Depends(obtener_servicio_autenticacion)
+    repositorio_usuarios: RepositorioUsuarios = Depends(obtener_repositorio_usuarios)
 ):
     """
     Registrar nuevo usuario
     """
-    repositorio = RepositorioUsuarios()
-    
     # Verificar si el usuario ya existe
-    usuario_existente = repositorio.obtener_usuario_por_email(usuario.email)
+    usuario_existente = repositorio_usuarios.obtener_usuario_por_email(usuario.email)
     if usuario_existente:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -53,7 +55,7 @@ def registrar_usuario(
         )
     
     # Crear usuario
-    usuario_creado = repositorio.crear_usuario(usuario)
+    usuario_creado = repositorio_usuarios.crear_usuario(usuario)
     if not usuario_creado:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -61,22 +63,14 @@ def registrar_usuario(
         )
     
     # Eliminar información sensible antes de retornar
-    usuario_creado.pop('contraseña_hash', None)
+    if 'contraseña_hash' in usuario_creado:
+        del usuario_creado['contraseña_hash']
     
     return Usuario(**usuario_creado)
 
 @router.get("/verificar-token")
-def verificar_token(
-    usuario_actual: dict = Depends(obtener_servicio_autenticacion)
-):
+def verificar_token():
     """
-    Verificar si el token es válido
+    Verificar si el token es válido (endpoint básico)
     """
-    return {
-        "mensaje": "Token válido",
-        "usuario": {
-            "id": usuario_actual.get("sub"),
-            "email": usuario_actual.get("email"),
-            "nombre": usuario_actual.get("nombre")
-        }
-    }
+    return {"mensaje": "Endpoint de verificación de token - implementar según necesidad"}

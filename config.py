@@ -11,8 +11,7 @@ class Settings(BaseSettings):
     ALGORITHM: str 
     ACCESS_TOKEN_EXPIRE_MINUTES: int 
     
-    # ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
-    ALLOWED_ORIGINS: List[str] = ["*"]
+    ALLOWED_ORIGINS: List[str]
     
     class Config:
         env_file = ".env"
