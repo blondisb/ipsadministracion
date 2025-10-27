@@ -1,6 +1,6 @@
 # 🏥 API Médica - Sistema de Gestión de Pacientes y Citas
 
-![Arquitectura del proyecto](.doc_media/appdiagram.png)
+![Arquitectura del proyecto](doc_media/appdiagram.png)
 
 ## 📋 Descripción
 
