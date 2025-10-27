@@ -9,6 +9,4 @@ groq
 python-dateutil
 crewai
 crewai-tools
-langchain-community
 langchain-groq
-litellm

@@ -1,5 +1,4 @@
 from crewai import LLM, Agent, Task, Crew, Process
-from crewai.tools import BaseTool
 from groq import Groq
 from typing import Dict, Any
 import json
