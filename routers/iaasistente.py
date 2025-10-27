@@ -19,7 +19,7 @@ async def procesar_solicitud_assistant(
     """
     try:
         servicio = obtener_servicio_assistant()
-        resultado = servicio.procesar_solicitud(request.mensaje)
+        resultado = servicio.procesar_solicitud(request.mensaje, request.paciente_id)
         
         return AssistantResponse(
             nombre_doctor=resultado["nombre_doctor"],

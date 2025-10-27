@@ -4,7 +4,7 @@ from datetime import date, time
 
 class AssistantRequest(BaseModel):
     mensaje: str
-    paciente_id: Optional[int] = None
+    paciente_id: int
 
 class AssistantResponse(BaseModel):
     nombre_doctor: str

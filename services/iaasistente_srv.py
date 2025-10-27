@@ -1,5 +1,5 @@
-from crewai import Agent, Task, Crew, Process
-from crewai_tools import BaseTool
+from crewai import LLM, Agent, Task, Crew, Process
+from crewai.tools import BaseTool
 from groq import Groq
 from typing import Dict, Any
 import json
@@ -14,6 +14,8 @@ from ai.tools import (
     VerificarPacienteTool
 )
 from config import settings
+import os
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "dummy")
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class ServicioAssistant:
         
         # Inicializar herramientas
         herramientas = [
-            BuscarProfesionalTool(),
+            # BuscarProfesionalTool(),
             ObtenerProfesionalesTool(),
             ObtenerHorariosTool(),
             BuscarDisponibleTool(),
@@ -43,19 +45,17 @@ class ServicioAssistant:
             tools=herramientas,
             verbose=True,
             allow_delegation=False,
-            llm=self._get_llm()
+            # llm=self._get_llm()
+            llm= LLM(
+                model=settings.AI_MODEL_NAME,
+                api_key=settings.GROQ_API_KEY,
+                temperature=0.1
+            ),
+            max_iter = 5
         )
         
         return agente
-    
-    def _get_llm(self):
-        """Configurar el LLM con Groq"""
-        from langchain_community.chat_models import ChatGroq
-        return ChatGroq(
-            model="llama3-8b-8192",
-            groq_api_key=settings.GROQ_API_KEY,
-            temperature=0.1
-        )
+
     
     def procesar_solicitud(self, mensaje: str, paciente_id: int = None) -> Dict[str, Any]:
         """Procesar la solicitud del usuario usando crewAI"""
@@ -109,40 +109,62 @@ class ServicioAssistant:
         """Crear la descripción de la tarea para el agente"""
         
         descripcion = f"""
-        INFORMACIÓN DEL PACIENTE:
-        - ID del paciente: {paciente_id or 'No especificado'}
-        
-        SOLICITUD DEL USUARIO:
-        "{mensaje}"
-        
-        TU TAREA:
-        1. Analizar la solicitud del usuario e identificar:
-           - Nombre del doctor si se menciona
-           - Fecha deseada (convertir 'hoy', 'mañana' a fechas reales)
-           - Hora deseada
-        
-        2. Buscar disponibilidad:
-           - Si se menciona un doctor específico, buscar su disponibilidad
-           - Si no se menciona doctor, buscar el primer profesional disponible
-           - Verificar que la fecha y hora estén disponibles
-        
-        3. Crear cita si es posible:
-           - SI el paciente_id está proporcionado Y hay disponibilidad, CREAR la cita automáticamente
-           - SI el paciente_id NO está proporcionado, solo verificar disponibilidad
-        
-        4. Generar respuesta en el formato JSON especificado.
-        
-        FECHAS DE REFERENCIA:
-        - Hoy: {date.today()}
-        - Mañana: {date.today() + timedelta(days=1)}
-        
-        REGLAS IMPORTANTES:
-        - Siempre responder en el formato JSON exacto especificado
-        - Si no hay disponibilidad, establecer "disponible": false y explicar en el mensaje
-        - Si el paciente_id no está proporcionado, NO crear la cita
-        - Ser claro y útil en el mensaje para el usuario
+            INFORMACIÓN DEL PACIENTE:
+            - ID del paciente: {paciente_id or "No especificado"}
+
+            SOLICITUD DEL USUARIO:
+            "{mensaje}"
+
+            TU TAREA — paso a paso:
+            1. Analizar la solicitud:
+            Siempre vas a usar la herrmienta 'obtener_profesionales_activos' para listar TODOS los profesionales.
+            1.a. Detectar nombre del doctor si está mencionado.
+            1.b. Detectar la fecha deseada (convertir “hoy”, “mañana” a fechas reales).
+            1.c. Detectar la hora deseada.
+
+            2. Si se menciona un doctor:
+            2.a. Obten el 'profesional_id' del profesional mencionado. Si existe.
+            2.b. Si no existe “no se encontraron profesionales” **DETÉN el proceso inmediatamente**.
+                - En ese caso retorna el JSON final con:
+                    * "disponible": false
+                    * "cita_creada": false
+                    * Un mensaje explícito indicando que no se encontró ese doctor.
+            2.c. Si sí se encontró al profesional, procede al paso 4 con ese profesional.
+
+            3. Si no se menciona doctor:
+            3.a. Usa la herramienta `obtener_profesionales_activos()` para obtener lista de profesionales disponibles.
+            3.b. Selecciona uno y solo UNO al azar.
+
+            4. Verificar disponibilidad del profesional elegido:
+            4.a- Usar `obtener_horarios_disponibles(profesional_id, fecha)`
+            4.b- Verificar que la hora solicitada esté dentro de los horarios disponibles.
+            4.c - Si no hay disponibilidad, marca `"disponible": false` y explica en el mensaje.
+            4.d - Si hay disponibilidad, marca `"disponible": true` y procede al paso 5.
+
+            5. Crear cita si es posible:
+            - Si `paciente_id` está definido y hay disponibilidad, usar `crear_cita_medica(...)`.
+            - Si `paciente_id` **NO** está definido, NO crear la cita, solo informar disponibilidad.
+
+            6. Generar la respuesta final en JSON exactamente con este formato (keys obligatorias):
+                "nombre_doctor": ...,
+                "fecha": "YYYY-MM-DD",
+                "hora": "HH:MM",
+                "profesional_id": ...,
+                "disponible": true/false,
+                "cita_creada": true/false,
+                "cita_id": null o número,
+                "mensaje": "explicación clara para el usuario"
+
+            REGLAS IMPORTANTES:
+            - Si no hay disponibilidad para la fecha/hora, marca `"disponible": false` y explica.
+            - Si el paciente_id no está dado, **no** crees la cita aunque haya disponibilidad.
+            - Sé claro, preciso y consistente en el JSON.
+            - No generes pasos innecesarios si ya hay un error detectado o falta de datos.
+
+            FECHAS DE REFERENCIA:
+            - Hoy: {date.today()}
+            - Mañana: {date.today() + timedelta(days=1)}
         """
-        
         return descripcion
     
     def _parsear_respuesta_crewai(self, respuesta: str) -> Dict[str, Any]:
@@ -164,6 +186,7 @@ class ServicioAssistant:
                 
                 datos = json.loads(json_str)
                 
+                print("\n\n2\nResultado crewAI:", datos)
                 return {
                     "nombre_doctor": datos.get("nombre_doctor", "No especificado"),
                     "fecha": datos.get("fecha", "No especificada"),

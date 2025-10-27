@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_API_KEY: str
     GROQ_API_KEY: str
+    AI_MODEL_NAME: str
     
     SECRET_KEY: str 
     ALGORITHM: str 

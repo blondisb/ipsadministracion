@@ -36,10 +36,10 @@ class BuscarProfesionalTool(BaseTool):
                         'telefono': profesional['telefono']
                     })
             
-            return resultados
+            return resultados if resultados else [{'ERROR': 'ERROR No se encontraron profesionales con ese nombre'}]
         except Exception as e:
             logger.error(f"Error buscando profesional por nombre {nombre}: {e}")
-            return []
+            return [{'ERROR': 'ERROR No se encontraron profesionales con ese nombre'}]
 
 class ObtenerProfesionalesTool(BaseTool):
     name: str = "obtener_profesionales_activos"
