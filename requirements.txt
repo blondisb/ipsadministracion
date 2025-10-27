@@ -3,6 +3,8 @@ python-dotenv
 fastapi
 uvicorn
 python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
 pydantic
 pydantic-settings
 groq

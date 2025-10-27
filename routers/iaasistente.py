@@ -7,12 +7,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-enrutador = APIRouter()
+router = APIRouter()
 
 def obtener_servicio_assistant() -> ServicioAssistant:
     return ServicioAssistant()
 
-@enrutador.post("/", response_model=AssistantResponse)
+@router.post("/", response_model=AssistantResponse)
 async def procesar_solicitud_assistant(
     request: AssistantRequest
 ):
@@ -43,7 +43,7 @@ async def procesar_solicitud_assistant(
         logger.error(f"Error en endpoint assistant: {e}")
         raise HTTPException(status_code=500, detail=f"Error del asistente: {str(e)}")
 
-@enrutador.get("/health")
+@router.get("/health")
 async def health_check():
     """
     Verificar que el asistente esté funcionando
