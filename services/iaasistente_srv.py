@@ -38,10 +38,13 @@ class ServicioAssistant:
         
         agente = Agent(
             role='Asistente Médico Senior',
-            goal='Ayudar a los pacientes a agendar citas médicas de manera eficiente y precisa',
-            backstory="""Eres un asistente médico inteligente y servicial que trabaja en una clínica.
-            Tu especialidad es entender las necesidades de los pacientes y agendar citas con los profesionales
-            médicos adecuados. Eres preciso, amable y siempre buscas la mejor opción para el paciente.""",
+            goal='Ayudar a los pacientes a agendar citas médicas de manera eficiente y precisa. Si el paciente o el profesional no existen, finaliza el proceso inmediatamente e informa claramente en el mensaje.',
+            backstory="""
+                Eres un asistente médico inteligente y servicial que trabaja en una clínica.
+                Tu especialidad es entender las necesidades de los pacientes y agendar citas con los profesionales
+                médicos adecuados. Eres preciso, amable y siempre buscas la mejor opción para el paciente.
+                Si el paciente o el profesional no existen, finaliza el proceso inmediatamente e informa claramente en el mensaje
+            """,
             tools=herramientas,
             verbose=True,
             allow_delegation=False,
@@ -90,7 +93,8 @@ class ServicioAssistant:
             resultado = crew.kickoff()
             
             # Parsear la respuesta
-            return self._parsear_respuesta_crewai(str(resultado))
+            final_result = self._parsear_respuesta_crewai(str(resultado))
+            return final_result
             
         except Exception as e:
             logger.error(f"Error procesando solicitud del asistente: {e}")
@@ -148,7 +152,7 @@ class ServicioAssistant:
             6. Generar la respuesta final en JSON exactamente con este formato (keys obligatorias):
                 "nombre_doctor": ...,
                 "fecha": "YYYY-MM-DD",
-                "hora": "HH:MM",
+                "hora": "HH:MM" AM/PM,
                 "profesional_id": ...,
                 "disponible": true/false,
                 "cita_creada": true/false,
@@ -156,6 +160,8 @@ class ServicioAssistant:
                 "mensaje": "explicación clara para el usuario"
 
             REGLAS IMPORTANTES:
+            - El profesional lo vas a elegir SOLO de la lista obtenida con la herramienta `obtener_profesionales_activos()`.
+            -Si el paciente o el profesional no existen, finaliza el proceso inmediatamente e informa claramente en el mensaje el error.
             - Si no hay disponibilidad para la fecha/hora, marca `"disponible": false` y explica.
             - Si el paciente_id no está dado, **no** crees la cita aunque haya disponibilidad.
             - Sé claro, preciso y consistente en el JSON.

@@ -10,7 +10,7 @@ class AssistantResponse(BaseModel):
     nombre_doctor: str
     fecha: str
     hora: str
-    profesional_id: int
+    profesional_id: int = None
     disponible: bool
     cita_creada: bool
     cita_id: Optional[int] = None

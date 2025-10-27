@@ -27,7 +27,9 @@ async def procesar_solicitud_assistant(
             hora=resultado["hora"],
             profesional_id=resultado["profesional_id"],
             disponible=resultado["disponible"],
-            mensaje=resultado["mensaje"]
+            mensaje=resultado["mensaje"],
+            cita_creada=resultado["cita_creada"],
+            cita_id=resultado.get("cita_id")
         )
         
     except Exception as e:
